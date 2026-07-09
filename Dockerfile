@@ -35,11 +35,16 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Install Node dependencies and build frontend assets (creates public/build/manifest.json)
-# Remove any lockfile generated on a different OS/architecture (e.g. Windows) so npm
-# resolves fresh, Linux-native binaries for tools like Rolldown/Rollup.
-RUN rm -f package-lock.json && npm install --include=optional && npm run build
+RUN rm -f package-lock.json && npm install && npm run build
+
 # Set correct permissions for Laravel's storage and cache directories
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+# (mkdir -p first, since git doesn't track empty folders and these may not exist)
+RUN mkdir -p /var/www/html/storage/framework/sessions \
+    /var/www/html/storage/framework/views \
+    /var/www/html/storage/framework/cache \
+    /var/www/html/storage/logs \
+    /var/www/html/bootstrap/cache \
+    && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Copy Nginx and Supervisor configs

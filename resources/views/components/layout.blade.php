@@ -5,11 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Idea</title>
     @vite('resources/css/app.css')
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class=" bg-background  text-foreground">
  <x-layout.nav/>
 <main class="max-w-7xl mx-auto px-6 pb-10 ">
     {{ $slot }}
 </main>
+
+   @session('success')
+{{--   A message that disappears after 3 sec--}}
+       <div
+{{--     'Alpinejs' Javascript framework:--}}
+           x-data="{ show: true }"
+           x-init="setTimeout(() => {show = false}, 3000)"
+           x-show="show"
+           x-transition.opacity.duration.300ms
+           class="bg-primary px-4 py-3 absolute bottom-4 right-4 rounded-lg"
+       >
+
+                    {{ $value }}
+
+       </div>
+
+   @endsession
 </body>
 </html>

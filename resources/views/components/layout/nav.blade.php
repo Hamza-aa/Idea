@@ -8,8 +8,15 @@
         </div>
 
         <div class="flex gap-x-6 items-center">
-            <a href="/login">Log In</a>
-            <a href="/register" class="btn">Register</a>
+            @auth
+                <form action="/logout" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-outlined">Log Out</button>
+                </form>
+            @else
+                <a href="/login">Log In</a>
+                <a href="/register" class="btn">Register</a>
+            @endauth
         </div>
 
     </div>

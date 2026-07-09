@@ -20,8 +20,9 @@ export default defineConfig({
         // lightningcss (Vite/Tailwind v4's default CSS minifier) doesn't support
         // CSS custom properties inside @media conditions, which Tailwind v4 generates
         // for responsive breakpoints (e.g. @media (min-width: var(--breakpoint-md))).
-        // Use esbuild's minifier instead to avoid this "Invalid media query" crash.
-        cssMinify: 'esbuild',
+        // esbuild is no longer bundled in Vite 8 (replaced by Rolldown/Oxc), so we
+        // can't switch minifiers — instead, disable CSS minification entirely.
+        cssMinify: false,
     },
     server: {
         watch: {

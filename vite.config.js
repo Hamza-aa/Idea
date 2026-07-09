@@ -8,14 +8,21 @@ export default defineConfig({
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.js'],
             refresh: true,
-            // fonts: [
-            //     bunny('Instrument Sans', {
-            //         weights: [400, 500, 600],
-            //     }),
-            // ],
+            fonts: [
+                bunny('Instrument Sans', {
+                    weights: [400, 500, 600],
+                }),
+            ],
         }),
         tailwindcss(),
     ],
+    build: {
+        // lightningcss (Vite/Tailwind v4's default CSS minifier) doesn't support
+        // CSS custom properties inside @media conditions, which Tailwind v4 generates
+        // for responsive breakpoints (e.g. @media (min-width: var(--breakpoint-md))).
+        // Use esbuild's minifier instead to avoid this "Invalid media query" crash.
+        cssMinify: 'esbuild',
+    },
     server: {
         watch: {
             ignored: ['**/storage/framework/views/**'],

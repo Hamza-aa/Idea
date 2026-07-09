@@ -21,6 +21,10 @@ RUN docker-php-ext-install mbstring pdo pdo_pgsql pgsql pcntl zip intl
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Install Node.js (needed to build frontend assets with Vite)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
+
 # Set working directory
 WORKDIR /var/www/html
 
@@ -29,6 +33,9 @@ COPY . .
 
 # Install PHP dependencies (production only, no dev packages)
 RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Install Node dependencies and build frontend assets (creates public/build/manifest.json)
+RUN npm install && npm run build
 
 # Set correct permissions for Laravel's storage and cache directories
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
